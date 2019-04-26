@@ -1,5 +1,9 @@
 package Problem4;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 class Solution {
 
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
@@ -58,10 +62,30 @@ class Solution {
     }
 
 
+    public double findMedianSortedArrays1(int[] nums1, int[] nums2) {
+        int size = nums1.length + nums2.length;
+        return help(nums1, nums2, 0, nums1.length - 1, 0, nums2.length - 1, size / 2);
+
+    }
+
+    public static double help(int[] nums1, int[] nums2, int l1, int r1, int l2, int r2, int k) {
+        if (k == 0) {
+            int size = nums1.length + nums2.length;
+            if (size % 2 == 1) return Math.min(nums1[l1], nums2[l2]);
+            return (nums1[l1] + nums2[l2]) / 2.0;
+        }
+        double mid1 = (r1 - l1 + 1) % 2 == 0 ? (nums1[(r1 + l1) / 2] + nums1[(r1 + l1) / 2 + 1]) / 2.0 : nums1[(r1 + l1) / 2];
+        double mid2 = (r2 - l2 + 1) % 2 == 0 ? (nums2[(r2 + l2) / 2] + nums2[(r2 + l2) / 2 + 1]) / 2.0 : nums2[(r2 + l2) / 2];
+        if (mid1 == mid2) return mid1;
+        if (mid1 < mid2) {
+        } else {
+        }
+        return 0;
+    }
 
     public static void main(String args[]) {
-        int[] nums1 = {1, 2};
-        int[] nums2 = {3, 4};
-        System.out.println(new Solution().findMedianSortedArrays(nums1, nums2));
+        int[] nums1 = {1, 2, 4};
+        int[] nums2 = {3};
+        System.out.println(new Solution().findMedianSortedArrays1(nums1, nums2));
     }
 }
