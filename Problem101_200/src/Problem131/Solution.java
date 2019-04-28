@@ -1,38 +1,39 @@
 package Problem131;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * dp[i]:表示从0-i这段字符串最少要切分的次数
- * dp[i] = min(dp[i],dp[j]+1)  j+1->i这一段是回文串
+ * 直接dfs即可
  */
 class Solution {
 
-    public int minCut(String s) {
-        boolean[][] mp = new boolean[s.length()][s.length()];
-        for (int i = 0; i < s.length(); i++) {
-            mp[i][i] = true;
-            if (i + 1 < s.length())
-                mp[i][i + 1] = s.charAt(i) == s.charAt(i + 1);
+    private static List<List<String>> ans = null;
+
+    public List<List<String>> partition(String s) {
+        ans = new ArrayList<>();
+        dfs(s, 0, new ArrayList<>());
+        return ans;
+    }
+
+    public void dfs(String s, int cur, List<String> res) {
+        if (cur >= s.length()) {
+            ans.add(new ArrayList<>(res));
         }
-        for (int i = 2; i < s.length(); ++i) {
-            for (int j = 0; j + i < s.length(); j++) {
-                mp[j][j + i] = s.charAt(j) == s.charAt(i + j) && mp[j + 1][j + i - 1];
+        for (int i = 0; i < s.length() - cur; ++i) {
+            if (isOk(s, cur, cur + i)) {
+                res.add(s.substring(cur, cur + i + 1));
+                dfs(s, cur + i + 1, res);
+                res.remove(res.size() - 1);
             }
         }
-        int[] dp = new int[s.length()];
-        for (int i = 0; i < dp.length; ++i) {
-            dp[i] = i;
+    }
+
+    public boolean isOk(String s, int b, int e) {
+        if (b == e) return true;
+        while (b < e) {
+            if (s.charAt(b++) != s.charAt(e--)) return false;
         }
-        for (int i = 0; i < s.length(); ++i) {
-            if (mp[0][i]) {
-                dp[i] = 0;
-            } else {
-                for (int j = 0; j < i; j++) {
-                    if (mp[j + 1][i]) {
-                        dp[i] = Math.min(dp[j] + 1, dp[i]);
-                    }
-                }
-            }
-        }
-        return dp[s.length() - 1];
+        return true;
     }
 }
